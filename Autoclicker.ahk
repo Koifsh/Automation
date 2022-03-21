@@ -18,7 +18,7 @@ Product_Version=1.1.33.2
 Set_AHK_Version=1
 Language_ID=40
 [ICONS]
-Icon_1=C:\Users\kaipy\Downloads\Mouse icon png.ico
+Icon_1=C:\Users\kaipy\Pictures\Camera Roll\YeE.ico
 Icon_2=0
 Icon_3=0
 Icon_4=0
@@ -44,9 +44,9 @@ keysToCheck := "Unbound||Left Mouse Button|Right Mouse Button|Middle Mouse Butto
 
 global cps
 global click1
+global escapee
 
-
-
+escapee := "yes"
 ;GUI LAYOUT
 ;.....................................
 
@@ -77,7 +77,6 @@ GuiControl, ChooseString, start1, %start1%
 GuiControl,, cps, %CPS1%
 GuiControl, ChooseString, Exitkey, %Exitkey%
 GuiControl, ChooseString, click1, %click1%
-Gui, Show
 return
 ;......................................
 
@@ -103,28 +102,38 @@ Finish:
     Gui, -AlwaysonTop
     if (start1 == "Unbound"){
         MsgBox,,,Please select a keybind
+        return
     }
     else if(Exitkey == "Unbound"){
         MsgBox,,,Please select an Exit Key
+        return
     }
     else if(click1 == "Unbound"){
         MsgBox,,,Please select the key you want pressed
+        return
     
     }
     else if(cps < 0){
         Msgbox,,,Please enter in a CPS
+        return
     }
-    else{
 
+    else if(click1 == Exitkey) or (Exitkey == start1) or (start1 == click1){
+        MsgBox,,,You cant have one or more of the same keybinding
+        return
+    }
+
+    else{
         Gui, Submit, NoHide
+        escapee := "no"
         SetKeyDelay % CPS ? CPS : -1, -1
-        Gui, Destroy
+        gui,hide
         Bindings("start1","Clicker")
         Bindings("Exitkey","Leave")
     } 
 
-autoClicker()
-{
+
+autoClicker(){
     static Toggle := False
     Toggle := !Toggle
     if (click1 == "Left Mouse Button"){
@@ -144,6 +153,13 @@ autoClicker()
     }
 }
 
+GuiClose:
+    if (escapee == "yes"){
+        ExitApp
+    }
+    else{
+        Gui,Hide
+    }
 
 exit()
 {
@@ -159,7 +175,6 @@ exit()
 }
 
 Esc::ExitApp
-
 
 Bindings(DDL, label)
 {
