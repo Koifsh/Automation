@@ -1,3 +1,4 @@
+v1.02
 Just a project I did as an eye-opener to the AutoHotKey language after branching off from python.
 A pretty customisable Autoclicker with options to change the keybinding, key pressed and the exit key.
 Can go up to about 60 clicks per second according to cpstest.org but it might go faster.
